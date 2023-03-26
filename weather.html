@@ -1,0 +1,112 @@
+
+<!DOCTYPE html>
+<html lang="en" >
+  <head>
+    <meta charset="utf-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body, .wrapper{ 
+         display:flex;
+        
+         align-items: center;
+         justify-content: center;
+       }
+       body{
+         padding: 0 10px;
+         min-height: 100vh;
+         background: #4A98F7;
+       }
+       .wrapper{
+         width: 450px;
+         padding: 30px 30px 38px; margin: 5px;
+         background: #fff;
+         border-radius: 10px;
+         flex-direction: column;
+         box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+         font-size: small;font-family: 'Courier New', Courier, monospace;
+       }
+       button{width:100px;margin:10px;background-color: green;color:white;border-radius:5px;}
+       input{border-radius: 5px;}
+       input:hover{ background-color: beige;}
+       </style>
+  </head>
+  <body>
+   
+    <div class="wrapper" id="wrapper">
+      <h1>Enter the city</h1>
+        <input type="text" id="city">
+        <button onclick="sub()" id="butt">SUBMIT</button>
+        <br>
+      <h3 id="today"></h3>
+    </div>
+
+
+
+    <script>
+
+     let input = document.getElementById("city");
+     input.addEventListener("keypress", function(event) {
+     if (event.key === "Enter") {
+     event.preventDefault();
+     document.getElementById("butt").click();
+     }
+      });
+        let wrapper=document.querySelector('#wrapper');
+        let w=document.querySelector('#today');
+        let today_weather=document.createElement('h1');
+
+
+        function sub(){
+        today_weather.innerHTML=" ";
+        let city=document.getElementById('city').value;
+        let url=`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=3265874a2c77ae4a04bb96236a642d2f&units=metric`;
+        fetch(url)
+        
+   .then((data)=>{return data.json();})
+   .then((objectdata)=>{
+    let data_city=objectdata.name;
+    let data_country=objectdata.sys.country;
+    let data_temp=objectdata.main.temp;
+    let data_humi=objectdata.main.humidity;
+    let data_icon=objectdata.weather[0].main;
+    let data_wind=objectdata.wind.speed;
+    let data_desc=objectdata.weather[0].description;
+
+    if(data_icon=="Clouds")
+    {
+      wrapper.style.backgroundImage="url(./Images/clouds.png)";
+      wrapper.style.backgroundSize="cover";
+    }
+    
+    else if(data_icon=="Mist" || data_icon== "Haze")
+    {
+      wrapper.style.backgroundImage="url(./Images/mist.png)";
+      wrapper.style.backgroundSize="cover";
+    }
+    else if(data_icon=="Clear")
+    {
+      wrapper.style.backgroundImage="url(./Images/clear.png)";
+      wrapper.style.backgroundSize="cover";
+    }
+    else if(data_icon=="Rain"||data_icon=="Rainy")
+    {
+      wrapper.style.backgroundImage="url(./Images/Rain.png)";
+      wrapper.style.backgroundSize="cover";
+    }
+    else if(data_icon=="Snow")
+    {
+      wrapper.style.backgroundImage="url(./Images/snow.png)";
+      wrapper.style.backgroundSize="cover";
+    }
+    
+    today_weather.innerText+="City: "+(data_city)+"\n"+"Type :"+data_icon+"\n"+"Temperature: "+(data_temp)+" ℃\n"+"Wind:"+(data_wind)+" m/s \n"+"Humidity: "+(data_humi)+"%";
+    w.appendChild(today_weather);
+
+    console.log(objectdata);
+   });
+
+}
+    </script>
+  </body>
+  </html>
